@@ -1,0 +1,54 @@
+info:
+  app:
+    name: Library Management
+
+server:
+  port: 8112
+
+spring:
+  application:
+    name: library-management
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://postgres:5432/artifact-management
+    username:
+    password:
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 10000
+      connection-test-query: SELECT 1
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    hibernate:
+      format_sql: true
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+logging:
+  level:
+    root: INFO
+  file:
+    name: logs/library-management.log
+
+profiles:
+  active: dev
+
+---
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop

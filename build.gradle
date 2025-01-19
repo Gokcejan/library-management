@@ -1,0 +1,33 @@
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+
+
+    sourceCompatibility = 17
+    targetCompatibility = 17
+
+    buildscript {
+        ext {
+            springBootVersion = "3.4.1"
+            springCloudVersion = "2022.0.4"
+            snippetsDir = file("build/generated-snippets")
+        }
+        repositories {
+            mavenCentral()
+        }
+        dependencies {
+            classpath 'io.spring.gradle:dependency-management-plugin:1.1.7'
+
+        }
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+}
