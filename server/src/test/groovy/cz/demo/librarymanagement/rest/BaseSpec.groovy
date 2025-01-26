@@ -5,10 +5,6 @@ import cz.demo.librarymanagement.core.WebMockSpec
 
 class BaseSpec extends WebMockSpec implements CleanUpDb{
 
-
-
-
-
     def setupSpec() {
     }
 
@@ -18,6 +14,5 @@ class BaseSpec extends WebMockSpec implements CleanUpDb{
 
     def cleanupSpec() {
     }
-
 
 }

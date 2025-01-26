@@ -1,7 +1,7 @@
 plugins {
     id "java"
-    id 'java-library'
     id "groovy"
+    id 'java-library'
     id "maven-publish"
     id "io.freefair.lombok" version "8.4"
     id "io.spring.dependency-management" version "1.1.7"
@@ -9,21 +9,20 @@ plugins {
     id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
+ext {
+    springBootVersion  = '3.4.1'
+    springCloudVersion = '2022.0.4'
+    snippetsDir = file("$buildDir/doc-api-adoc")
+}
+
 sourceSets.main.java.srcDirs = []
 sourceSets.main.groovy.srcDirs += ["src/main/java"]
-
-sourceCompatibility = 17
-targetCompatibility = 17
 
 dependencyManagement {
     imports {
         mavenBom "org.springframework.boot:spring-boot-dependencies:$springBootVersion"
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
     }
-}
-
-ext {
-    set('snippetsDir', file("build/generated-snippets"))
 }
 
 configurations {
@@ -33,8 +32,10 @@ configurations {
 }
 
 dependencies {
-    // Spring dependencies
+    // Modul :public
     implementation project(':public')
+
+    // Basic Spring Boot starters
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-batch'
@@ -47,7 +48,6 @@ dependencies {
     implementation 'org.projectlombok:lombok'
     implementation "org.apache.groovy:groovy-all:4.0.22"
 
-
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -55,27 +55,61 @@ dependencies {
     // Development tools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-    // Runtime dependencies
+    // Runtime (databases)
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'org.postgresql:postgresql'
 
-    // Testing dependencies
+    // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.batch:spring-batch-test'
+    // REST Docs snippets
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+    // Spock
     testImplementation group: 'org.spockframework', name: 'spock-spring', version: '2.4-M1-groovy-4.0'
     testImplementation group: 'org.spockframework', name: 'spock-core', version: '2.4-M1-groovy-4.0'
 }
 
-tasks.named('test') {
-    outputs.dir snippetsDir
+tasks.named('test', Test) {
     useJUnitPlatform()
+
+    outputs.dir snippetsDir
+
+    // Add Spring REST Docs to the test classpath
+    systemProperty 'org.springframework.restdocs.outputDir', snippetsDir
 }
 
-tasks.named('asciidoctor') {
-    inputs.dir snippetsDir
+asciidoctor {
     dependsOn test
+
+    sourceDir = file('src/main/resources/doc-api-adoc')
+
+    outputDir file("$buildDir/doc-api-html")
+
+    inputs.dir snippetsDir
+
+    baseDirFollowsSourceDir()
+
+    outputOptions {
+        backends 'html5'
+    }
+
+    attributes(
+            'snippets': snippetsDir,
+
+            'source-highlighter': 'prettify',
+            'imagesdir': 'images',
+            'toc': 'left',
+            'icons': 'font',
+            'setanchors': 'true',
+            'idprefix': '',
+            'idseparator': '-',
+            'docinfo1': 'true'
+    )
+}
+
+build {
+    dependsOn asciidoctor
 }
