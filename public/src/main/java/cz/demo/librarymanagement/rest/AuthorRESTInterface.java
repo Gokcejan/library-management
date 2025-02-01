@@ -2,11 +2,12 @@ package cz.demo.librarymanagement.rest;
 
 import cz.demo.librarymanagement.dto.AuthorCreateDto;
 import cz.demo.librarymanagement.dto.AuthorDto;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 public interface AuthorRESTInterface {
 
@@ -15,4 +16,7 @@ public interface AuthorRESTInterface {
 
     @RequestMapping(value = "/authors/{authorId}", method = RequestMethod.GET)
     ResponseEntity<AuthorDto> getAuthor(@PathVariable("authorId") Long authorId);
+
+    @RequestMapping(value = "/authors", method = RequestMethod.GET)
+    PagedModel<EntityModel<AuthorDto>> getAuthors(@RequestParam Map<String, String> queryParams);
 }
