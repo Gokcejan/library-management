@@ -6,6 +6,8 @@ import cz.demo.librarymanagement.application.domain.repository.AuthorRepository;
 import cz.demo.librarymanagement.application.exceptions.NotFoundException;
 import cz.demo.librarymanagement.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -28,12 +30,6 @@ public class AuthorService {
         return authorMapper.toDto(savedAuthor);
     }
 
-
-   /* public Author createAuthor(AuthorCreateDto createDto) {
-        Author author = authorMapper.toEntity(createDto);
-        return authorRepository.save(author);
-    }*/
-
     public AuthorDto getAuthor(Long authorId) {
         Author author = findAuthor(authorId);
         return authorMapper.toDto(author);
@@ -42,5 +38,10 @@ public class AuthorService {
     private Author findAuthor(Long authorId) {
         Optional<Author> authorOptional = authorRepository.findOneById(authorId);
         return authorOptional.orElseThrow(() -> new NotFoundException(format("The Author [%s] not found.", authorId)));
+    }
+
+    public Page<AuthorDto> getAllAuthors(Pageable pageable) {
+        Page<Author> authorsPage = authorRepository.findAll(pageable);
+        return authorsPage.map(authorMapper::toDto);
     }
 }
