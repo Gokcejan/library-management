@@ -10,4 +10,18 @@ class TestData {
             }
         """
     }
+
+    static final String defaultUserBody() {
+        return """
+            {
+                "firstName": "George",
+                "lastName": "Trump",
+                "username": "george",
+                "password": "password",
+                "email": "george@trump.com",
+                "phone": "123456789",
+                "role": "USER"
+            }
+        """
+    }
 }

@@ -1,10 +1,8 @@
 package cz.demo.librarymanagement.application.rest;
 
-import cz.demo.librarymanagement.application.domain.factory.AuthorMapper;
-import cz.demo.librarymanagement.application.servicelayer.AuthorService;
-import cz.demo.librarymanagement.dto.AuthorCreateDto;
-import cz.demo.librarymanagement.dto.AuthorDto;
-import cz.demo.librarymanagement.rest.AuthorRESTInterface;
+import cz.demo.librarymanagement.application.servicelayer.UserService;
+import cz.demo.librarymanagement.dto.*;
+import cz.demo.librarymanagement.rest.UserRESTInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,8 +12,6 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
@@ -25,31 +21,30 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-public class AuthorRESTController implements AuthorRESTInterface {
+public class UserRESTController implements UserRESTInterface {
 
     @Autowired
-    private AuthorService authorService;
+    UserService userService;
 
     @Autowired
-    private PagedResourcesAssembler<AuthorDto> pagedResourcesAssembler;
+    private PagedResourcesAssembler<UserDto> pagedResourcesAssembler;
 
     @Override
-    public ResponseEntity<AuthorDto> createAuthor(@RequestBody AuthorCreateDto createDto) {
-        AuthorDto response = authorService.createAuthor(createDto);
-        URI location = URI.create(String.format("/authors/%d", response.getId()));
+    public ResponseEntity<UserDto> createUser(UserCreateDto createDto) {
+        UserDto response = userService.createUser(createDto);
+        URI location = URI.create(String.format("/users/%d", response.getId()));
 
         return ResponseEntity.created(location).body(response);
     }
 
     @Override
-    public ResponseEntity<AuthorDto> getAuthor(@PathVariable("authorId") Long authorId) {
-        AuthorDto response = authorService.getAuthor(authorId);
+    public ResponseEntity<UserDto> getUser(Long userId) {
+        UserDto response = userService.getUser(userId);
         return ResponseEntity.ok(response);
     }
 
     @Override
-    public PagedModel<EntityModel<AuthorDto>> getAuthors(Map<String, String> queryParams) {
-
+    public PagedModel<EntityModel<UserDto>> getUsers(Map<String, String> queryParams) {
         int page = Integer.parseInt(queryParams.getOrDefault("page", "0"));
         int size = Integer.parseInt(queryParams.getOrDefault("size", "10"));
         String sortStr = queryParams.getOrDefault("sort", "id,asc");
@@ -61,12 +56,25 @@ public class AuthorRESTController implements AuthorRESTInterface {
         }
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<AuthorDto> authorDtoPage = authorService.getAllAuthors(pageable);
+        Page<UserDto> userDtoPage = userService.getAllUsers(pageable);
 
-        return pagedResourcesAssembler.toModel(authorDtoPage,
-                authorDto -> EntityModel.of(authorDto,
-                        linkTo(methodOn(AuthorRESTController.class).getAuthor(authorDto.getId())).withSelfRel()
+        return pagedResourcesAssembler.toModel(userDtoPage,
+                userDto -> EntityModel.of(userDto,
+                        linkTo(methodOn(UserRESTController.class).getUser(userDto.getId())).withSelfRel()
                 )
         );
     }
+
+    @Override
+    public ResponseEntity<UserDto> deleteUser(Long userId) {
+        userService.deleteChannel(userId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<AuthResponseDto> authenticateUser(UserAuthenticateDto authenticateDto) {
+        AuthResponseDto response = userService.authenticateUser(authenticateDto);
+        return ResponseEntity.ok(response);
+    }
+
 }

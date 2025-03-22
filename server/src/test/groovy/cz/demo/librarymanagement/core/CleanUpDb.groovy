@@ -11,6 +11,7 @@ trait CleanUpDb {
     def cleanUpDb() {
         jdbcTemplate.execute("DELETE FROM author")
         jdbcTemplate.execute("DELETE FROM book")
+        jdbcTemplate.execute("DELETE FROM library_user")
 
     }
 
