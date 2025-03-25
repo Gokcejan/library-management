@@ -35,7 +35,7 @@ public class AuthorService {
         return authorMapper.toDto(author);
     }
 
-    private Author findAuthor(Long authorId) {
+    Author findAuthor(Long authorId) {
         Optional<Author> authorOptional = authorRepository.findOneById(authorId);
         return authorOptional.orElseThrow(() -> new NotFoundException(format("The Author [%s] not found.", authorId)));
     }
