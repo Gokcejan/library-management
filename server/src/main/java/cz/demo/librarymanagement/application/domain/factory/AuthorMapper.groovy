@@ -16,6 +16,8 @@ class AuthorMapper {
         dto.firstName = author.firstName
         dto.lastName = author.lastName
         dto.books = author.books.sort { it.id }.collect { it.id }
+        dto.createdAt = author.createdAt
+        dto.updatedAt = author.updatedAt
 
         dto
     }

@@ -1,7 +1,7 @@
 package cz.demo.librarymanagement.application.rest;
 
-import cz.demo.librarymanagement.application.domain.factory.AuthorMapper;
 import cz.demo.librarymanagement.application.servicelayer.AuthorService;
+import cz.demo.librarymanagement.application.utils.PaginationUtil;
 import cz.demo.librarymanagement.dto.AuthorCreateDto;
 import cz.demo.librarymanagement.dto.AuthorDto;
 import cz.demo.librarymanagement.rest.AuthorRESTInterface;
@@ -49,17 +49,7 @@ public class AuthorRESTController implements AuthorRESTInterface {
 
     @Override
     public PagedModel<EntityModel<AuthorDto>> getAuthors(Map<String, String> queryParams) {
-
-        int page = Integer.parseInt(queryParams.getOrDefault("page", "0"));
-        int size = Integer.parseInt(queryParams.getOrDefault("size", "10"));
-        String sortStr = queryParams.getOrDefault("sort", "id,asc");
-
-        String[] sortParts = sortStr.split(",");
-        Sort sort = Sort.by(sortParts[0]);
-        if (sortParts.length > 1 && sortParts[1].equalsIgnoreCase("desc")) {
-            sort = sort.descending();
-        }
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PaginationUtil.resolvePageable(queryParams);
 
         Page<AuthorDto> authorDtoPage = authorService.getAllAuthors(pageable);
 

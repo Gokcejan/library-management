@@ -52,7 +52,9 @@ class AuthorApiSpec extends BaseSpec implements CleanUpDb {
                         fieldWithPath("id").description("The ID of the created author"),
                         fieldWithPath("firstName").description("The first name of the created author"),
                         fieldWithPath("lastName").description("The last name of the created author"),
-                        fieldWithPath("books").description("The list of book IDs associated with the author")
+                        fieldWithPath("books").description("The list of book IDs associated with the author"),
+                        fieldWithPath("createdAt").description("The date and time when the author was created"),
+                        fieldWithPath("updatedAt").description("The date and time when the author was last updated")
                 )
         ))
 

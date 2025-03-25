@@ -1,6 +1,7 @@
 package cz.demo.librarymanagement.application.rest;
 
 import cz.demo.librarymanagement.application.servicelayer.UserService;
+import cz.demo.librarymanagement.application.utils.PaginationUtil;
 import cz.demo.librarymanagement.dto.*;
 import cz.demo.librarymanagement.rest.UserRESTInterface;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,16 +46,7 @@ public class UserRESTController implements UserRESTInterface {
 
     @Override
     public PagedModel<EntityModel<UserDto>> getUsers(Map<String, String> queryParams) {
-        int page = Integer.parseInt(queryParams.getOrDefault("page", "0"));
-        int size = Integer.parseInt(queryParams.getOrDefault("size", "10"));
-        String sortStr = queryParams.getOrDefault("sort", "id,asc");
-
-        String[] sortParts = sortStr.split(",");
-        Sort sort = Sort.by(sortParts[0]);
-        if (sortParts.length > 1 && sortParts[1].equalsIgnoreCase("desc")) {
-            sort = sort.descending();
-        }
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PaginationUtil.resolvePageable(queryParams);
 
         Page<UserDto> userDtoPage = userService.getAllUsers(pageable);
 
