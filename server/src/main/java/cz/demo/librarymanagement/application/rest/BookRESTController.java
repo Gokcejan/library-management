@@ -14,6 +14,9 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
@@ -32,7 +35,7 @@ public class BookRESTController implements BookRESTInterface {
     BookService bookService;
 
     @Override
-    public ResponseEntity<BookDto> createBook(BookCreateDto createDto) {
+    public ResponseEntity<BookDto> createBook(@RequestBody BookCreateDto createDto) {
         BookDto response = bookService.createBook(createDto);
         URI location = URI.create(String.format("/books/%d", response.getId()));
 
@@ -40,13 +43,13 @@ public class BookRESTController implements BookRESTInterface {
     }
 
     @Override
-    public ResponseEntity<BookDto> getBook(Long bookId) {
+    public ResponseEntity<BookDto> getBook(@PathVariable Long bookId) {
         BookDto response = bookService.getBook(bookId);
         return ResponseEntity.ok(response);
     }
 
     @Override
-    public PagedModel<EntityModel<BookDto>> getBooks(Map<String, String> queryParams) {
+    public PagedModel<EntityModel<BookDto>> getBooks(@RequestParam Map<String, String> queryParams) {
         Pageable pageable = PaginationUtil.resolvePageable(queryParams);
 
         Page<BookDto> bookDtoPage = bookService.getAllBooks(pageable);
@@ -59,7 +62,7 @@ public class BookRESTController implements BookRESTInterface {
     }
 
     @Override
-    public ResponseEntity<Void> deleteBook(Long bookId) {
+    public ResponseEntity<Void> deleteBook(@PathVariable Long bookId) {
         bookService.deleteBook(bookId);
         return ResponseEntity.noContent().build();
     }

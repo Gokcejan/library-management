@@ -2,6 +2,7 @@ package cz.demo.librarymanagement.application.servicelayer;
 
 import cz.demo.librarymanagement.application.domain.Author;
 import cz.demo.librarymanagement.application.domain.Book;
+import cz.demo.librarymanagement.application.domain.Publisher;
 import cz.demo.librarymanagement.application.domain.factory.BookMapper;
 import cz.demo.librarymanagement.application.domain.repository.BookRepository;
 import cz.demo.librarymanagement.application.exceptions.NotFoundException;
@@ -28,10 +29,14 @@ public class BookService {
     @Autowired
     AuthorService authorService;
 
+    @Autowired
+    PublisherService publisherService;
+
     public BookDto createBook(BookCreateDto createDto) {
         Author author = authorService.findAuthor(createDto.getAuthorId());
-        //TODO: add publisher
-        Book book = bookMapper.toEntity(createDto, author, null);
+        Publisher publisher = publisherService.findPublisher(createDto.getPublisherId());
+
+        Book book = bookMapper.toEntity(createDto, author, publisher);
         Book savedBook = bookRepository.save(book);
         return bookMapper.toDto(savedBook);
     }
