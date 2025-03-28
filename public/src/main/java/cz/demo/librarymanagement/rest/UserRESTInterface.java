@@ -28,7 +28,6 @@ public interface UserRESTInterface {
     @RequestMapping(value = "/users/{userId}", method = RequestMethod.DELETE)
     ResponseEntity<UserDto> deleteUser(@PathVariable("userId") Long userId);
 
-
 }
 
 

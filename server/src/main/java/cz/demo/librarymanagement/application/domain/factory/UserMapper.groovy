@@ -8,9 +8,6 @@ import org.springframework.stereotype.Component
 @Component
 class UserMapper {
 
-
-
-
     UserDto toDto(User user) {
         UserDto dto = new UserDto()
 
@@ -26,7 +23,7 @@ class UserMapper {
     }
 
 
-    def User toEntity(UserCreateDto createDto) {
+    User toEntity(UserCreateDto createDto) {
         User user = new User()
 
         user.firstName = createDto.firstName

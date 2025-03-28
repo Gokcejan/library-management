@@ -24,4 +24,12 @@ class TestData {
             }
         """
     }
+
+    static final String defaultPublisherBody() {
+        return """
+            {
+                "name": "Test_Publisher"
+            }
+        """
+    }
 }

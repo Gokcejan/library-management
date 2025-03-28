@@ -2,17 +2,21 @@ package cz.demo.librarymanagement.application.rest;
 
 import cz.demo.librarymanagement.application.servicelayer.UserService;
 import cz.demo.librarymanagement.application.utils.PaginationUtil;
-import cz.demo.librarymanagement.dto.*;
+import cz.demo.librarymanagement.dto.AuthResponseDto;
+import cz.demo.librarymanagement.dto.UserAuthenticateDto;
+import cz.demo.librarymanagement.dto.UserCreateDto;
+import cz.demo.librarymanagement.dto.UserDto;
 import cz.demo.librarymanagement.rest.UserRESTInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
@@ -31,7 +35,7 @@ public class UserRESTController implements UserRESTInterface {
     private PagedResourcesAssembler<UserDto> pagedResourcesAssembler;
 
     @Override
-    public ResponseEntity<UserDto> createUser(UserCreateDto createDto) {
+    public ResponseEntity<UserDto> createUser(@RequestBody UserCreateDto createDto) {
         UserDto response = userService.createUser(createDto);
         URI location = URI.create(String.format("/users/%d", response.getId()));
 
@@ -39,13 +43,13 @@ public class UserRESTController implements UserRESTInterface {
     }
 
     @Override
-    public ResponseEntity<UserDto> getUser(Long userId) {
+    public ResponseEntity<UserDto> getUser(@PathVariable("userId") Long userId) {
         UserDto response = userService.getUser(userId);
         return ResponseEntity.ok(response);
     }
 
     @Override
-    public PagedModel<EntityModel<UserDto>> getUsers(Map<String, String> queryParams) {
+    public PagedModel<EntityModel<UserDto>> getUsers(@RequestParam Map<String, String> queryParams) {
         Pageable pageable = PaginationUtil.resolvePageable(queryParams);
 
         Page<UserDto> userDtoPage = userService.getAllUsers(pageable);
@@ -58,13 +62,13 @@ public class UserRESTController implements UserRESTInterface {
     }
 
     @Override
-    public ResponseEntity<UserDto> deleteUser(Long userId) {
+    public ResponseEntity<UserDto> deleteUser(@PathVariable("userId") Long userId) {
         userService.deleteChannel(userId);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    public ResponseEntity<AuthResponseDto> authenticateUser(UserAuthenticateDto authenticateDto) {
+    public ResponseEntity<AuthResponseDto> authenticateUser(@RequestBody UserAuthenticateDto authenticateDto) {
         AuthResponseDto response = userService.authenticateUser(authenticateDto);
         return ResponseEntity.ok(response);
     }
