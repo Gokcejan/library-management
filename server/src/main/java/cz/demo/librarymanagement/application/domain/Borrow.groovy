@@ -35,6 +35,9 @@ class Borrow {
     @Column(name = "RETURN_DATE")
     LocalDateTime returnDate
 
+    @Column(name = "DUE_DATE")
+    LocalDateTime dueDate
+
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS", nullable = false)
     BorrowStatus status = BorrowStatus.BORROWED

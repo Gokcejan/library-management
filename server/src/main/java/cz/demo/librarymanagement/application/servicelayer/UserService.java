@@ -33,9 +33,9 @@ public class UserService {
 
     public UserDto createUser(UserCreateDto createDto) {
 
-        Optional<User> foundUser = userRepository.findOneByUsername(createDto.getUsername());
+        Optional<User> userOptional = userRepository.findOneByUsername(createDto.getUsername());
 
-        if (foundUser.isPresent()) {
+        if (userOptional.isPresent()) {
             throw new IllegalStateException("Username already in use");
         }
 
@@ -80,7 +80,7 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    private User findUser(Long userId) {
+    public User findUser(Long userId) {
         Optional<User> userOptional = userRepository.findOneById(userId);
         return userOptional.orElseThrow(() -> new NotFoundException(format("The User [%s] not found.", userId)));
     }

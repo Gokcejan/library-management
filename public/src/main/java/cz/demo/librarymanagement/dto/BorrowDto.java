@@ -15,6 +15,7 @@ public class BorrowDto {
     private Long id;
     private LocalDateTime borrowDate;
     private LocalDateTime returnDate;
+    private LocalDateTime dueDate;
     private BorrowStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
