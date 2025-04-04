@@ -1,0 +1,17 @@
+{
+  "frontendFolder": "/Users/kundera/__spring-stuff/library-management/./frontend",
+  "themeFolder": "themes",
+  "themeResourceFolder": "/Users/kundera/__spring-stuff/library-management/./frontend/generated/jar-resources",
+  "staticOutput": "/Users/kundera/__spring-stuff/library-management/target/classes/META-INF/VAADIN/webapp/VAADIN/static",
+  "generatedFolder": "generated",
+  "statsOutput": "/Users/kundera/__spring-stuff/library-management/target/classes/META-INF/VAADIN/config",
+  "frontendBundleOutput": "/Users/kundera/__spring-stuff/library-management/target/classes/META-INF/VAADIN/webapp",
+  "devBundleOutput": "/Users/kundera/__spring-stuff/library-management/target/dev-bundle/webapp",
+  "devBundleStatsOutput": "/Users/kundera/__spring-stuff/library-management/target/dev-bundle/config",
+  "jarResourcesFolder": "/Users/kundera/__spring-stuff/library-management/./frontend/generated/jar-resources",
+  "themeName": "",
+  "clientServiceWorkerSource": "/Users/kundera/__spring-stuff/library-management/target/sw.ts",
+  "pwaEnabled": false,
+  "offlineEnabled": false,
+  "offlinePath": "'offline.html'"
+}
