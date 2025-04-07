@@ -17,12 +17,7 @@ import java.time.LocalDateTime
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity(name = "FINE")
-class Fine {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tableGenerator")
-    @Column(name = "ID", unique = true, nullable = false, updatable = false)
-    Long id
+class Fine extends AbstractEntity {
 
     @Column(name = "AMOUNT", nullable = false)
     BigDecimal amount

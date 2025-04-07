@@ -19,12 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity(name = "LIBRARY_USER")
-class User implements UserDetails {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tableGenerator")
-    @Column(name = "ID", unique = true, nullable = false, updatable = false)
-    Long id
+class User extends AbstractEntity implements UserDetails {
 
     @Column(name = "FIRST_NAME", nullable = false)
     String firstName
