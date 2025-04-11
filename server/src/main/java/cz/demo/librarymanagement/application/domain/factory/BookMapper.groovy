@@ -33,6 +33,8 @@ class BookMapper {
         dto.status = book.status
         dto.createdAt = book.createdAt
         dto.updatedAt = book.updatedAt
+        dto.authorLastName = book.relatedAuthor.lastName
+        dto.publisherName = book.relatedPublisher.name
 
         dto
     }

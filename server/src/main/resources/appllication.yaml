@@ -6,6 +6,8 @@ server:
   port: 8112
 
 spring:
+  profiles:
+    active: dev
   application:
     name: library-management
   main:
@@ -37,9 +39,6 @@ logging:
     root: INFO
   file:
     name: logs/library-management.log
-
-profiles:
-  active: dev
 
 ---
 spring:

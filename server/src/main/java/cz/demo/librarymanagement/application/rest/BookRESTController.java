@@ -52,7 +52,7 @@ public class BookRESTController implements BookRESTInterface {
     public PagedModel<EntityModel<BookDto>> getBooks(@RequestParam Map<String, String> queryParams) {
         Pageable pageable = PaginationUtil.resolvePageable(queryParams);
 
-        Page<BookDto> bookDtoPage = bookService.getAllBooks(pageable);
+        Page<BookDto> bookDtoPage = bookService.getAllBooks(null, pageable);
 
         return pagedResourcesAssembler.toModel(bookDtoPage,
                 bookDto -> EntityModel.of(bookDto,

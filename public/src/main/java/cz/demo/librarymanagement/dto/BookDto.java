@@ -19,4 +19,6 @@ public class BookDto {
     private LocalDateTime updatedAt;
     private Long authorId;
     private Long publisherId;
+    private String authorLastName;
+    private String publisherName;
 }
