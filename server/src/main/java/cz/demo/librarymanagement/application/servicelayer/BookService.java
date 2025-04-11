@@ -8,6 +8,7 @@ import cz.demo.librarymanagement.application.domain.repository.BookRepository;
 import cz.demo.librarymanagement.application.exceptions.NotFoundException;
 import cz.demo.librarymanagement.dto.BookCreateDto;
 import cz.demo.librarymanagement.dto.BookDto;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,10 +46,18 @@ public class BookService {
         Book book = findBook(bookId);
         return bookMapper.toDto(book);
     }
+    @Transactional
+    public Page<BookDto> getAllBooks(String filterText, Pageable pageable) {
+        if (filterText == null || filterText.isEmpty()) {
 
-    public Page<BookDto> getAllBooks(Pageable pageable) {
-        Page<Book> booksPage = bookRepository.findAll(pageable);
-        return booksPage.map(bookMapper::toDto);
+            Page<Book> booksPage = bookRepository.findAll(pageable);
+            return booksPage.map(bookMapper::toDto);
+        } else {
+
+            Page<Book> booksPage = bookRepository.findAllFilteredByAuthorLastName(filterText, pageable);
+            return booksPage.map(bookMapper::toDto);
+
+        }
     }
 
     public void deleteBook(Long bookId) {
