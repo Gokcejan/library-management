@@ -65,7 +65,7 @@ public class BookService {
         Book book = findBook(bookId);
 
         if (book == null) {
-            throw new IllegalArgumentException("User not found: " + bookId);
+            throw new IllegalArgumentException("Book not found: " + bookId);
         }
         bookRepository.delete(book);
 

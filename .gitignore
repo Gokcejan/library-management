@@ -1,4 +1,3 @@
-.gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -9,12 +8,20 @@ build/
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
+# all folders with .idea
+.idea
 *.iws
 *.iml
 *.ipr
+*s101*
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+
+# all .pmd files
+*.pmd
+infinitest*
+/out
 
 ### Eclipse ###
 .apt_generated
@@ -34,6 +41,13 @@ bin/
 /dist/
 /nbdist/
 /.nb-gradle/
+
+### Ignore Gradle files
+.gradle
+.gradle/
+*.metadata*
+.java-version
+classes/
 
 ### VS Code ###
 .vscode/
