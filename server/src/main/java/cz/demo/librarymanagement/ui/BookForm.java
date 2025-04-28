@@ -12,12 +12,14 @@ import cz.demo.librarymanagement.domain.BookStatus;
 
 public class BookForm extends FormLayout {
 
+    TextField bookId = new TextField("Book ID");
     TextField title = new TextField("Title");
     ComboBox<BookStatus> status = new ComboBox<>("Status");
     TextField authorId = new TextField("Author ID");
     TextField publisherId = new TextField("Publisher ID");
 
-    Button save = new Button("Save");
+    Button update = new Button("Update");
+    Button create = new Button("Create");
     Button delete = new Button("Delete");
     Button close = new Button("Close");
 
@@ -25,7 +27,12 @@ public class BookForm extends FormLayout {
     public BookForm() {
         addClassName("book-form");
 
+        setResponsiveSteps(
+                new ResponsiveStep("0", 1)
+        );
+
         add(
+                bookId,
                 title,
                 status,
                 authorId,
@@ -36,13 +43,17 @@ public class BookForm extends FormLayout {
     }
 
     private Component createButtonsLayout() {
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        update.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        create.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
-        save.addClickShortcut(Key.ENTER);
+        update.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
 
-        return new HorizontalLayout(save, delete, close);
+        HorizontalLayout buttonsLayout = new HorizontalLayout(update, create, delete, close);
+        buttonsLayout.addClassName("buttons");
+
+        return buttonsLayout;
     }
 }

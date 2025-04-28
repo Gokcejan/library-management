@@ -3,6 +3,7 @@ package cz.demo.librarymanagement.ui;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -32,6 +33,19 @@ public class MainView extends VerticalLayout {
         configureFilter();
 
         form= new BookForm();
+
+        form.delete.addClickListener(e -> {
+            try {
+                Long id = Long.valueOf(form.bookId.getValue());
+                bookService.deleteBook(id);
+                Notification.show("Book deleted successfully");
+                updateList();
+                clearForm();
+            } catch (Exception ex) {
+                Notification.show("Delete failed: " + ex.getMessage());
+                clearForm();
+            }
+        });
 
         Div content = new Div(grid, form);
         content.addClassName("content");
@@ -97,6 +111,14 @@ public class MainView extends VerticalLayout {
         List<BookDto> books = pageOfBooks.getContent();
         grid.setItems(books);
 
+    }
+
+    private void clearForm() {
+        form.bookId.clear();
+        form.title.clear();
+        form.status.clear();
+        form.authorId.clear();
+        form.publisherId.clear();
     }
 
 }
