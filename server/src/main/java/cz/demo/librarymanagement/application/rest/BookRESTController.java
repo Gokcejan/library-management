@@ -7,9 +7,7 @@ import cz.demo.librarymanagement.dto.BookDto;
 import cz.demo.librarymanagement.rest.BookRESTInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
@@ -37,7 +35,7 @@ public class BookRESTController implements BookRESTInterface {
     @Override
     public ResponseEntity<BookDto> createBook(@RequestBody BookCreateDto createDto) {
         BookDto response = bookService.createBook(createDto);
-        URI location = URI.create(String.format("/books/%d", response.getId()));
+        URI location = URI.create(String.format("/books/%d", response.getBookId()));
 
         return ResponseEntity.created(location).body(response);
     }
@@ -56,7 +54,7 @@ public class BookRESTController implements BookRESTInterface {
 
         return pagedResourcesAssembler.toModel(bookDtoPage,
                 bookDto -> EntityModel.of(bookDto,
-                        linkTo(methodOn(BookRESTController.class).getBook(bookDto.getId())).withSelfRel()
+                        linkTo(methodOn(BookRESTController.class).getBook(bookDto.getBookId())).withSelfRel()
                 )
         );
     }

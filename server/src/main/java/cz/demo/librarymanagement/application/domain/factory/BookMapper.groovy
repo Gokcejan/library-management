@@ -26,7 +26,7 @@ class BookMapper {
     BookDto toDto(Book book) {
         BookDto dto = new BookDto()
 
-        dto.id = book.id
+        dto.bookId = book.id
         dto.title = book.title
         dto.authorId = book.relatedAuthor.id
         dto.publisherId = book.relatedPublisher.id
