@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Relation(collectionRelation = "books")
 public class BookDto {
 
-    private Long id;
+    private Long bookId;
     private String title;
     private BookStatus status;
     private LocalDateTime createdAt;

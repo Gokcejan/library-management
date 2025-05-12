@@ -8,12 +8,19 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
+import cz.demo.librarymanagement.application.domain.Book;
+import cz.demo.librarymanagement.application.domain.repository.BookRepository;
+import cz.demo.librarymanagement.application.exceptions.NotFoundException;
 import cz.demo.librarymanagement.application.servicelayer.BookService;
 import cz.demo.librarymanagement.dto.BookDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
+import java.util.Optional;
+
+import static java.lang.String.format;
 
 @Route("")
 @CssImport("./styles/shared-styles.css")
@@ -24,6 +31,9 @@ public class MainView extends VerticalLayout {
     TextField filterText = new TextField();
     private BookService bookService;
 
+    @Autowired
+    private BookRepository bookRepository;
+
     public MainView(BookService bookService) {
         this.bookService = bookService;
         addClassName("list-view");
@@ -32,7 +42,7 @@ public class MainView extends VerticalLayout {
         configureGrid();
         configureFilter();
 
-        form= new BookForm();
+        form = new BookForm();
 
         form.delete.addClickListener(e -> {
             try {
@@ -53,14 +63,15 @@ public class MainView extends VerticalLayout {
 
         add(filterText, content);
         updateList();
+        closeEditor();
     }
 
     private void configureGrid() {
         grid.removeAllColumns();
         grid.addClassName("book-grid");
         grid.setSizeFull();
-        grid.addColumn(BookDto::getId)
-                .setHeader("ID")
+        grid.addColumn(BookDto::getBookId)
+                .setHeader("Book ID")
                 .setSortable(true)
                 .setAutoWidth(true);
         grid.addColumn(BookDto::getAuthorLastName)
@@ -95,6 +106,30 @@ public class MainView extends VerticalLayout {
                 .setHeader("Updated")
                 .setSortable(true)
                 .setAutoWidth(true);
+
+        grid.asSingleSelect().addValueChangeListener(evt -> editBook(evt.getValue()));
+    }
+
+    private void editBook(BookDto dto) {
+        if (dto == null) {
+            closeEditor();
+        } else {
+            /*Book book = findBook(dto.getId());*/
+            form.setBook(dto);
+            form.setVisible(true);
+            addClassName("editing");
+        }
+    }
+
+    private Book findBook(Long bookId) {
+        Optional<Book> bookOptional = bookRepository.findOneById(bookId);
+        return bookOptional.orElseThrow(() -> new NotFoundException(format("The Book [%s] not found.", bookId)));
+    }
+
+    private void closeEditor() {
+        form.setBook(null);
+        form.setVisible(false);
+        removeClassName("editing");
     }
 
     private void configureFilter() {
