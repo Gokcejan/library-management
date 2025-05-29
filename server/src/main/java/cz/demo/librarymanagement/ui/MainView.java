@@ -1,9 +1,11 @@
 package cz.demo.librarymanagement.ui;
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -12,7 +14,9 @@ import cz.demo.librarymanagement.application.domain.Book;
 import cz.demo.librarymanagement.application.domain.repository.BookRepository;
 import cz.demo.librarymanagement.application.exceptions.NotFoundException;
 import cz.demo.librarymanagement.application.servicelayer.BookService;
+import cz.demo.librarymanagement.dto.BookCreateDto;
 import cz.demo.librarymanagement.dto.BookDto;
+import cz.demo.librarymanagement.dto.BookUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,9 +44,39 @@ public class MainView extends VerticalLayout {
         setSizeFull();
 
         configureGrid();
-        configureFilter();
+
 
         form = new BookForm();
+        form.addListener(BookForm.UpdateEvent.class, this::updateBook);
+        form.addListener(BookForm.DeleteEvent.class, this::deleteBook);
+        form.addListener(BookForm.CreateEvent.class, this::createBook);
+        form.addListener(BookForm.CloseEvent.class, event -> closeEditor());
+
+/*        form.update.addClickListener(e -> {
+            try {
+                // 1) získejte ID z formuláře
+                Long id = Long.valueOf(form.bookId.getValue());
+
+                // 2) vytvořte BookUpdateDto a nastavte v něm nová data
+                BookUpdateDto dto = new BookUpdateDto();
+                dto.setTitle(form.title.getValue());
+                dto.setStatus(form.status.getValue());
+                dto.setAuthorId(Long.valueOf(form.authorId.getValue()));
+                dto.setPublisherId(Long.valueOf(form.publisherId.getValue()));
+
+                // 3) zavolejte updateService
+                bookService.updateBook(id, dto);
+
+                // 4) notifikace a obnovit grid
+                Notification.show("Book updated successfully");
+                updateList();
+                clearForm();
+                closeEditor();
+            } catch (Exception ex) {
+                Notification.show("Update failed: " + ex.getMessage());
+                clearForm();
+            }
+        });
 
         form.delete.addClickListener(e -> {
             try {
@@ -55,15 +89,57 @@ public class MainView extends VerticalLayout {
                 Notification.show("Delete failed: " + ex.getMessage());
                 clearForm();
             }
-        });
+        });*/
 
         Div content = new Div(grid, form);
         content.addClassName("content");
         content.setSizeFull();
 
-        add(filterText, content);
+        add(getToolBar(), content);
         updateList();
         closeEditor();
+    }
+
+    private void createBook(BookForm.CreateEvent evt) {
+
+        BookCreateDto dto = new BookCreateDto();
+        dto.setTitle(evt.getBookDto().getTitle());
+        dto.setStatus(evt.getBookDto().getStatus());
+        dto.setAuthorId(evt.getBookDto().getAuthorId());
+        dto.setPublisherId(evt.getBookDto().getPublisherId());
+
+        bookService.createBook(dto);
+
+        Notification.show("Book created successfully");
+        updateList();
+        clearForm();
+        closeEditor();
+    }
+
+    private void deleteBook(BookForm.DeleteEvent evt) {
+
+        bookService.deleteBook(evt.getBookDto().getBookId());
+        Notification.show("Book deleted successfully");
+        updateList();
+        clearForm();
+        closeEditor();
+    }
+
+    private void updateBook(BookForm.UpdateEvent evt) {
+        Long id = Long.valueOf(form.bookId.getValue());
+
+        BookUpdateDto dto = new BookUpdateDto();
+        dto.setTitle(evt.getBookDto().getTitle());
+        dto.setStatus(evt.getBookDto().getStatus());
+        dto.setAuthorId(evt.getBookDto().getAuthorId());
+        dto.setPublisherId(evt.getBookDto().getPublisherId());
+
+        bookService.updateBook(evt.getBookDto().getBookId(), dto);
+        Notification.show("Book updated successfully");
+        updateList();
+        clearForm();
+        closeEditor();
+
     }
 
     private void configureGrid() {
@@ -132,17 +208,30 @@ public class MainView extends VerticalLayout {
         removeClassName("editing");
     }
 
-    private void configureFilter() {
+    private HorizontalLayout getToolBar() {
         filterText.setPlaceholder("Filter by Author");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());
+
+        Button addBookButton = new Button("Add book", click -> addBook());
+
+        HorizontalLayout toolbar = new HorizontalLayout(filterText, addBookButton);
+        toolbar.addClassName("toolbar");
+
+        return toolbar;
+
+    }
+
+    private void addBook() {
+        grid.asSingleSelect().clear();
+        editBook(new BookDto());
     }
 
     private void updateList() {
         String filterValue = filterText.getValue();
 
-        Page<BookDto> pageOfBooks = bookService.getAllBooks(filterValue, PageRequest.of(0, 30));
+        Page<BookDto> pageOfBooks = bookService.getAllBooks(filterValue, PageRequest.of(0, 50));
         List<BookDto> books = pageOfBooks.getContent();
         grid.setItems(books);
 

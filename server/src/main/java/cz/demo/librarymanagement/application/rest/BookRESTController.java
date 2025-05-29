@@ -4,6 +4,7 @@ import cz.demo.librarymanagement.application.servicelayer.BookService;
 import cz.demo.librarymanagement.application.utils.PaginationUtil;
 import cz.demo.librarymanagement.dto.BookCreateDto;
 import cz.demo.librarymanagement.dto.BookDto;
+import cz.demo.librarymanagement.dto.BookUpdateDto;
 import cz.demo.librarymanagement.rest.BookRESTInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -63,5 +64,11 @@ public class BookRESTController implements BookRESTInterface {
     public ResponseEntity<Void> deleteBook(@PathVariable Long bookId) {
         bookService.deleteBook(bookId);
         return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<BookDto> updateBook(@PathVariable("bookId") Long bookId, @RequestBody BookUpdateDto updateDto) {
+        BookDto response = bookService.updateBook(bookId, updateDto);
+        return ResponseEntity.ok(response);
     }
 }

@@ -5,6 +5,7 @@ import cz.demo.librarymanagement.application.domain.Book
 import cz.demo.librarymanagement.application.domain.Publisher
 import cz.demo.librarymanagement.dto.BookCreateDto
 import cz.demo.librarymanagement.dto.BookDto
+import cz.demo.librarymanagement.dto.BookUpdateDto
 import org.springframework.stereotype.Component
 
 @Component
@@ -37,5 +38,16 @@ class BookMapper {
         dto.publisherName = book.relatedPublisher.name
 
         dto
+    }
+
+    Book updateEntity(Book book, BookUpdateDto dto, Author author, Publisher publisher) {
+
+        book.title = dto.title
+        book.status = dto.status
+        book.relatedAuthor = author
+        book.relatedPublisher = publisher
+
+        book
+
     }
 }
