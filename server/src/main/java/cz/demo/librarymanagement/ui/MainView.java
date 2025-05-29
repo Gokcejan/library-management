@@ -52,45 +52,6 @@ public class MainView extends VerticalLayout {
         form.addListener(BookForm.CreateEvent.class, this::createBook);
         form.addListener(BookForm.CloseEvent.class, event -> closeEditor());
 
-/*        form.update.addClickListener(e -> {
-            try {
-                // 1) získejte ID z formuláře
-                Long id = Long.valueOf(form.bookId.getValue());
-
-                // 2) vytvořte BookUpdateDto a nastavte v něm nová data
-                BookUpdateDto dto = new BookUpdateDto();
-                dto.setTitle(form.title.getValue());
-                dto.setStatus(form.status.getValue());
-                dto.setAuthorId(Long.valueOf(form.authorId.getValue()));
-                dto.setPublisherId(Long.valueOf(form.publisherId.getValue()));
-
-                // 3) zavolejte updateService
-                bookService.updateBook(id, dto);
-
-                // 4) notifikace a obnovit grid
-                Notification.show("Book updated successfully");
-                updateList();
-                clearForm();
-                closeEditor();
-            } catch (Exception ex) {
-                Notification.show("Update failed: " + ex.getMessage());
-                clearForm();
-            }
-        });
-
-        form.delete.addClickListener(e -> {
-            try {
-                Long id = Long.valueOf(form.bookId.getValue());
-                bookService.deleteBook(id);
-                Notification.show("Book deleted successfully");
-                updateList();
-                clearForm();
-            } catch (Exception ex) {
-                Notification.show("Delete failed: " + ex.getMessage());
-                clearForm();
-            }
-        });*/
-
         Div content = new Div(grid, form);
         content.addClassName("content");
         content.setSizeFull();
@@ -126,7 +87,6 @@ public class MainView extends VerticalLayout {
     }
 
     private void updateBook(BookForm.UpdateEvent evt) {
-        Long id = Long.valueOf(form.bookId.getValue());
 
         BookUpdateDto dto = new BookUpdateDto();
         dto.setTitle(evt.getBookDto().getTitle());
@@ -190,7 +150,6 @@ public class MainView extends VerticalLayout {
         if (dto == null) {
             closeEditor();
         } else {
-            /*Book book = findBook(dto.getId());*/
             form.setBook(dto);
             form.setVisible(true);
             addClassName("editing");
