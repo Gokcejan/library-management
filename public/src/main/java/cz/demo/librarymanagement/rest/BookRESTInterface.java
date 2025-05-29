@@ -2,6 +2,7 @@ package cz.demo.librarymanagement.rest;
 
 import cz.demo.librarymanagement.dto.BookCreateDto;
 import cz.demo.librarymanagement.dto.BookDto;
+import cz.demo.librarymanagement.dto.BookUpdateDto;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
@@ -22,4 +23,11 @@ public interface BookRESTInterface {
 
     @RequestMapping(value = "/books/{bookId}", method = RequestMethod.DELETE)
     ResponseEntity<Void> deleteBook(@PathVariable("bookId") Long bookId);
+
+    @RequestMapping(value = "/books/{bookId}", method = RequestMethod.PUT)
+    ResponseEntity<BookDto> updateBook(
+            @PathVariable("bookId") Long bookId,
+            @RequestBody BookUpdateDto updateDto
+    );
+
 }

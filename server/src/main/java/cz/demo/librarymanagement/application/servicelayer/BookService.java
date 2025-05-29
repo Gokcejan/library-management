@@ -8,6 +8,7 @@ import cz.demo.librarymanagement.application.domain.repository.BookRepository;
 import cz.demo.librarymanagement.application.exceptions.NotFoundException;
 import cz.demo.librarymanagement.dto.BookCreateDto;
 import cz.demo.librarymanagement.dto.BookDto;
+import cz.demo.librarymanagement.dto.BookUpdateDto;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -71,8 +72,21 @@ public class BookService {
 
     }
 
-    Book findBook(Long bookId) {
+     public Book findBook(Long bookId) {
         Optional<Book> bookOptional = bookRepository.findOneById(bookId);
         return bookOptional.orElseThrow(() -> new NotFoundException(format("The Book [%s] not found.", bookId)));
+    }
+
+    @Transactional
+    public BookDto updateBook(Long bookId, BookUpdateDto dto) {
+        Book book = findBook(bookId);
+        Author author = authorService.findAuthor(dto.getAuthorId());
+        Publisher publisher = publisherService.findPublisher(dto.getPublisherId());
+
+        Book updatedBook = bookMapper.updateEntity(book, dto, author, publisher);
+
+        Book savedBook = bookRepository.save(updatedBook);
+        return bookMapper.toDto(savedBook);
+
     }
 }

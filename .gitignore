@@ -54,3 +54,6 @@ classes/
 
 ### Mac OS ###
 .DS_Store
+/server/frontend/generated/flow/generated-flow-imports.d.ts
+/server/frontend/generated/flow/generated-flow-imports.js
+/server/frontend/generated/vaadin.ts
