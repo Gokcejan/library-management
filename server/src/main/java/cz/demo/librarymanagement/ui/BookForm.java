@@ -57,7 +57,7 @@ public class BookForm extends FormLayout {
     public void setBook(BookDto bookDto) {
         binder.setBean(bookDto);
 
-        update.setEnabled(binder.isValid());     // <--- CHANGED: synchronizace stavu tlačítka
+        update.setEnabled(binder.isValid());
         create.setEnabled(binder.isValid());
     }
 
@@ -78,8 +78,8 @@ public class BookForm extends FormLayout {
 
         binder.addStatusChangeListener(evt -> {
             boolean valid = binder.isValid();
-            update.setEnabled(valid);                          // <--- CHANGED
-            create.setEnabled(valid);                          // <--- NEW
+            update.setEnabled(valid);
+            create.setEnabled(valid);
         });
 
         HorizontalLayout buttonsLayout = new HorizontalLayout(update, create, delete, close);
@@ -94,13 +94,12 @@ public class BookForm extends FormLayout {
         }
     }
 
-    private void validateAndCreate() {                     // <--- NEW
+    private void validateAndCreate() {
         if (binder.isValid()) {
             fireEvent(new CreateEvent(this, binder.getBean()));
         }
     }
 
-    // Events
     @Getter
     public static abstract class BookFormEvent extends ComponentEvent<BookForm> {
         private BookDto bookDto;
@@ -118,7 +117,7 @@ public class BookForm extends FormLayout {
         }
     }
 
-    public static class CreateEvent extends BookFormEvent {  // <--- NEW
+    public static class CreateEvent extends BookFormEvent {
         CreateEvent(BookForm source, BookDto bookDto) {
             super(source, bookDto);
         }
