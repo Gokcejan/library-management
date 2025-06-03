@@ -1,4 +1,4 @@
-package cz.demo.librarymanagement.ui;
+package cz.demo.librarymanagement.ui.views.list;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
