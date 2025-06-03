@@ -57,3 +57,7 @@ classes/
 /server/frontend/generated/flow/generated-flow-imports.d.ts
 /server/frontend/generated/flow/generated-flow-imports.js
 /server/frontend/generated/vaadin.ts
+
+/server/node_modules/
+/server/src/main/bundles/
+/server/vite.generated.ts

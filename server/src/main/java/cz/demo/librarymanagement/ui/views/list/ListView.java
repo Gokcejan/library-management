@@ -1,4 +1,4 @@
-package cz.demo.librarymanagement.ui;
+package cz.demo.librarymanagement.ui.views.list;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -9,6 +9,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import cz.demo.librarymanagement.application.domain.Book;
 import cz.demo.librarymanagement.application.domain.repository.BookRepository;
@@ -17,6 +18,7 @@ import cz.demo.librarymanagement.application.servicelayer.BookService;
 import cz.demo.librarymanagement.dto.BookCreateDto;
 import cz.demo.librarymanagement.dto.BookDto;
 import cz.demo.librarymanagement.dto.BookUpdateDto;
+import cz.demo.librarymanagement.ui.MainLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,9 +28,9 @@ import java.util.Optional;
 
 import static java.lang.String.format;
 
-@Route("")
-@CssImport("./styles/shared-styles.css")
-public class MainView extends VerticalLayout {
+@Route(value = "", layout = MainLayout.class)
+@PageTitle("List of Books")
+public class ListView extends VerticalLayout {
 
     private final BookForm form;
     Grid<BookDto> grid = new Grid<>(BookDto.class);
@@ -38,7 +40,7 @@ public class MainView extends VerticalLayout {
     @Autowired
     private BookRepository bookRepository;
 
-    public MainView(BookService bookService) {
+    public ListView(BookService bookService) {
         this.bookService = bookService;
         addClassName("list-view");
         setSizeFull();
