@@ -1,0 +1,67 @@
+/* Main view */
+
+a[highlight] {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.header {
+    padding: 0 var(--lumo-space-m);
+}
+
+.header h1.logo {
+    font-size: 1em;
+    margin: var(--lumo-space-m);
+}
+
+/* List view */
+
+.list-view .content {
+    display: flex;
+}
+
+.list-view .book-grid {
+    flex: 2;
+}
+
+.list-view .book-form {
+    flex: 1;
+    padding: var(--lumo-space-m);
+}
+
+@media all and (max-width: 1100px) {
+    .book-view.editing .toolbar,
+    .list-view.editing .book.grid {
+        display: none;
+    }
+}
+
+.book-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lumo-space-m);
+    padding: var(--lumo-space-m);
+}
+
+.book-form .buttons {
+    display: flex;
+    gap: var(--lumo-space-s);
+    justify-content: flex-start;
+}
+
+.login-view {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--lumo-base-color);
+}
+
+vaadin-login-form {
+    width: 350px;
+}
+
+:host {
+    display: block;
+    padding: var(--lumo-space-m) var(--lumo-space-l);
+}

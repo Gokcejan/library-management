@@ -1,4 +1,3 @@
-.gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -9,12 +8,20 @@ build/
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
+# all folders with .idea
+.idea
 *.iws
 *.iml
 *.ipr
+*s101*
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+
+# all .pmd files
+*.pmd
+infinitest*
+/out
 
 ### Eclipse ###
 .apt_generated
@@ -35,8 +42,22 @@ bin/
 /nbdist/
 /.nb-gradle/
 
+### Ignore Gradle files
+.gradle
+.gradle/
+*.metadata*
+.java-version
+classes/
+
 ### VS Code ###
 .vscode/
 
 ### Mac OS ###
 .DS_Store
+/server/frontend/generated/flow/generated-flow-imports.d.ts
+/server/frontend/generated/flow/generated-flow-imports.js
+/server/frontend/generated/vaadin.ts
+
+/server/node_modules/
+/server/src/main/bundles/
+/server/vite.generated.ts

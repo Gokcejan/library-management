@@ -2,7 +2,6 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
 
-
     sourceCompatibility = 17
     targetCompatibility = 17
 
@@ -10,24 +9,23 @@ subprojects {
         ext {
             springBootVersion = "3.4.1"
             springCloudVersion = "2022.0.4"
-            snippetsDir = file("build/generated-snippets")
+            docAdocDir = file('build/doc-api-adoc')
+            docHtmlDir = file('build/doc-api-html')
         }
         repositories {
             mavenCentral()
+            jcenter()
         }
         dependencies {
-            classpath 'io.spring.gradle:dependency-management-plugin:1.1.7'
+            classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.7'
 
+            classpath 'io.spring.gradle:dependency-management-plugin:1.1.7'
         }
     }
 
     repositories {
         mavenCentral()
+        jcenter()
     }
 
-    java {
-        toolchain {
-            languageVersion = JavaLanguageVersion.of(17)
-        }
-    }
 }

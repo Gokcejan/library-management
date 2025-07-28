@@ -1,0 +1,17 @@
+[[resource-library-management-author]]
+==== Author
+
+[[create-library-management-author]]
+===== Create Author
+Create new Author.
+
+.curl request
+include::{snippets}/create-author/curl-request.adoc[]
+.Example request
+include::{snippets}/create-author/http-request.adoc[]
+.Request structure
+include::{snippets}/create-author/request-fields.adoc[]
+.Example response
+include::{snippets}/create-author/http-response.adoc[]
+.Response structure
+include::{snippets}/create-author/response-fields.adoc[]

@@ -22,18 +22,16 @@ import java.time.LocalDateTime
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity(name = "BORROW")
-class Borrow {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tableGenerator")
-    @Column(name = "ID", unique = true, nullable = false, updatable = false)
-    Long id
+class Borrow extends AbstractEntity {
 
     @Column(name = "BORROW_DATE", nullable = false)
     LocalDateTime borrowDate
 
     @Column(name = "RETURN_DATE")
     LocalDateTime returnDate
+
+    @Column(name = "DUE_DATE")
+    LocalDateTime dueDate
 
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS", nullable = false)

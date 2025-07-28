@@ -4,7 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.hateoas.server.core.Relation;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
 @Getter
 @Setter
 @Relation(collectionRelation = "authors")
@@ -14,4 +16,6 @@ public class AuthorDto {
     private String firstName;
     private String lastName;
     private List<Long> books;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

@@ -56,7 +56,7 @@ The Library Management System is a RESTful application designed for managing a l
            ```bash
            ./gradlew test
            ```
-        2. The generated documentation will be available in the `build/generated-snippets` directory.
+        2. The generated documentation will be available in the `build/doc-api-adoc` directory.
         3. These snippets can be integrated into a static site or shared as-is for API consumers.
 
 - **Sample API Request (curl)**:

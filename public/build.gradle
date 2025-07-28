@@ -38,7 +38,11 @@ task sourceJar(type: Jar) {
 publishing {
     publications {
         library(MavenPublication) {
+            groupId = project.groupId
+            artifactId = project.artifactId
+            version = project.version
             from components.java
+
 
             versionMapping {
                 usage('java-api') {

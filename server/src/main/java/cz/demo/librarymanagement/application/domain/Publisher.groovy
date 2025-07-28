@@ -17,12 +17,7 @@ import java.time.LocalDateTime
 
 @EntityListeners([AuditingEntityListener.class])
 @Entity(name = "PUBLISHER")
-class Publisher {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tableGenerator")
-    @Column(name = "ID", unique = true, nullable = false, updatable = false)
-    Long id
+class Publisher extends AbstractEntity {
 
     @Column(name = "NAME", nullable = false)
     String name

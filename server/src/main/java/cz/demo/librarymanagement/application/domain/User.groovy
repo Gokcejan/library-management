@@ -1,24 +1,26 @@
 package cz.demo.librarymanagement.application.domain
 
+import cz.demo.librarymanagement.domain.Role
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners
+import jakarta.persistence.Enumerated
+import jakarta.persistence.EnumType
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
+import org.apache.commons.codec.digest.DigestUtils
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity(name = "LIBRARY_USER")
-class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tableGenerator")
-    @Column(name = "ID", unique = true, nullable = false, updatable = false)
-    Long id
+class User extends AbstractEntity implements UserDetails {
 
     @Column(name = "FIRST_NAME", nullable = false)
     String firstName
@@ -32,6 +34,33 @@ class User {
     @Column(name = "PHONE", nullable = true)
     String phone
 
+    @Column(name = "USERNAME", unique = true, nullable = false)
+    String username
+
+    @Column(name = "PASSWORD", nullable = false)
+    String password
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ROLE", nullable = false)
+    Role role
+
     @OneToMany(mappedBy = "borrowedBy", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     Set<Borrow> borrows = new HashSet<>()
+
+    @Override
+    Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()))
+    }
+
+    User(){
+    }
+
+    User(String username, String password, Role role){
+        this.username = username
+        this.role = role
+        this.password = DigestUtils.sha1Hex(password)
+
+    }
+
+
 }
