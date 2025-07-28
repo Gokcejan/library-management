@@ -6,6 +6,9 @@ import cz.demo.librarymanagement.application.domain.Publisher;
 import cz.demo.librarymanagement.application.domain.repository.AuthorRepository;
 import cz.demo.librarymanagement.application.domain.repository.BookRepository;
 import cz.demo.librarymanagement.application.domain.repository.PublisherRepository;
+import cz.demo.librarymanagement.application.servicelayer.UserService;
+import cz.demo.librarymanagement.domain.Role;
+import cz.demo.librarymanagement.dto.UserCreateDto;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +34,8 @@ public class DataInitializer {
     PublisherRepository publisherRepository;
     @Autowired
     BookRepository bookRepository;
+    @Autowired
+    UserService userService;
 
     @PostConstruct
     public void init() {
@@ -118,5 +123,13 @@ public class DataInitializer {
 
             bookRepository.save(book);
         }
+
+        userService.createUser(new UserCreateDto("Jan", "Kundera", "username",
+                "password", "jan@gmail.com", "123456", Role.USER));
+
+        userService.createUser(new UserCreateDto("Iva", "Jerabkova", "iva",
+                "iva", "iva@gmail.com", "78956", Role.ADMIN));
+
+        log.info("Ending test data initialization...");
     }
 }
