@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
+import org.apache.commons.codec.digest.DigestUtils
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -50,5 +51,16 @@ class User extends AbstractEntity implements UserDetails {
     Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()))
     }
+
+    User(){
+    }
+
+    User(String username, String password, Role role){
+        this.username = username
+        this.role = role
+        this.password = DigestUtils.sha1Hex(password)
+
+    }
+
 
 }

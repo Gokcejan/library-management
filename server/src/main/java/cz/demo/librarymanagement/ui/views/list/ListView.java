@@ -19,6 +19,8 @@ import cz.demo.librarymanagement.dto.BookCreateDto;
 import cz.demo.librarymanagement.dto.BookDto;
 import cz.demo.librarymanagement.dto.BookUpdateDto;
 import cz.demo.librarymanagement.ui.MainLayout;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +32,7 @@ import static java.lang.String.format;
 
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("List of Books")
+@RolesAllowed("USER")
 public class ListView extends VerticalLayout {
 
     private final BookForm form;
