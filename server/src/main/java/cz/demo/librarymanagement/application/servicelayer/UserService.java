@@ -1,5 +1,6 @@
 package cz.demo.librarymanagement.application.servicelayer;
 
+import com.vaadin.flow.component.notification.Notification;
 import cz.demo.librarymanagement.application.domain.User;
 import cz.demo.librarymanagement.application.domain.factory.UserMapper;
 import cz.demo.librarymanagement.application.domain.repository.UserRepository;
@@ -36,7 +37,9 @@ public class UserService {
         Optional<User> userOptional = userRepository.findOneByUsername(createDto.getUsername());
 
         if (userOptional.isPresent()) {
+            Notification.show("Username already in use");
             throw new IllegalStateException("Username already in use");
+
         }
 
         User user = userMapper.toEntity(createDto);
