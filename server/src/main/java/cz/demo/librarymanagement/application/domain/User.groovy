@@ -52,15 +52,34 @@ class User extends AbstractEntity implements UserDetails {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()))
     }
 
-    User(){
+    @Override
+    String getPassword() {
+        return password
     }
 
-    User(String username, String password, Role role){
-        this.username = username
-        this.role = role
-        this.password = DigestUtils.sha1Hex(password)
-
+    @Override
+    String getUsername() {
+        return username
     }
 
+    @Override
+    boolean isAccountNonExpired() {
+        return true
+    }
+
+    @Override
+    boolean isAccountNonLocked() {
+        return true
+    }
+
+    @Override
+    boolean isCredentialsNonExpired() {
+        return true
+    }
+
+    @Override
+    boolean isEnabled() {
+        return true
+    }
 
 }

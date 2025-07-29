@@ -32,7 +32,7 @@ import static java.lang.String.format;
 
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("List of Books")
-@RolesAllowed("USER")
+@RolesAllowed({"USER", "ADMIN"})
 public class ListView extends VerticalLayout {
 
     private final BookForm form;

@@ -65,3 +65,29 @@ vaadin-login-form {
     display: block;
     padding: var(--lumo-space-m) var(--lumo-space-l);
 }
+
+/* -----------------------------------------------------------------
+   Register view — centre the whole form block on the page
+   ----------------------------------------------------------------- */
+.register-view {
+    height: 100vh;           /* occupy the full viewport */
+    display: flex;           /* flex container */
+    flex-direction: column;  /* stack children vertically */
+    justify-content: center; /* vertical centring */
+    align-items: center;     /* horizontal centring */
+
+    /* optional — match the login page background */
+    background: var(--lumo-base-color);
+}
+
+/* (keep the width & gap tweaks for the inner FormLayout) */
+.register-form::part(form) {
+    max-width: 480px;
+    gap: var(--lumo-space-m);
+}
+
+.register-form vaadin-text-field,
+.register-form vaadin-email-field,
+.register-form vaadin-password-field {
+    width: 100%;
+}
