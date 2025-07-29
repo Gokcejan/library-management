@@ -1,17 +1,19 @@
 package cz.demo.librarymanagement.ui.views.login;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import cz.demo.librarymanagement.application.servicelayer.UserService;
 import cz.demo.librarymanagement.domain.Role;
@@ -22,43 +24,49 @@ import org.springframework.beans.factory.annotation.Autowired;
 @PageTitle("Register")
 @CssImport("./styles/shared-styles.css")
 @AnonymousAllowed
-public class RegisterView extends Composite {
+public class RegisterView extends Composite<VerticalLayout> {
 
     @Autowired
     UserService userService;
 
-    @Override
-    protected Component initContent(){
+
+    public RegisterView(UserService userService) {
+        this.userService = userService;
+
         TextField firstName = new TextField("First name");
         TextField lastName = new TextField("Last name");
         TextField userName = new TextField("Username");
-        PasswordField password1 = new PasswordField("Password");
-        PasswordField password2 = new PasswordField("Confirm password");
-        EmailField email = new EmailField("email");
+        EmailField email = new EmailField("E‑mail");
+        PasswordField pwd1 = new PasswordField("Password");
+        PasswordField pwd2 = new PasswordField("Confirm password");
         TextField phoneNumber = new TextField("Phone number");
 
+        FormLayout form = new FormLayout();
+        form.addClassName("register-form");
+        form.add(firstName, lastName, userName, email, pwd1, pwd2, phoneNumber);
 
-        return new VerticalLayout(
-                new H2("Register"),
-                firstName,
-                lastName,
-                userName,
-                password1,
-                password2,
-                email,
-                phoneNumber,
-                new Button("Send", event -> register(
-                        firstName.getValue(),
-                        lastName.getValue(),
-                        userName.getValue(),
-                        password1.getValue(),
-                        password2.getValue(),
-                        email.getValue(),
-                        phoneNumber.getValue()
-                ))
+        form.setColspan(userName,2);
+        form.setColspan(email,2);
+        form.setColspan(phoneNumber,2);
 
-
+        form.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("0",1),
+                new FormLayout.ResponsiveStep("480px",2)
         );
+
+        Button send = new Button("Register", e ->
+                register(firstName.getValue(), lastName.getValue(),
+                        userName.getValue(), pwd1.getValue(), pwd2.getValue(),
+                        email.getValue(), phoneNumber.getValue())
+        );
+
+        RouterLink link = new RouterLink("Log in", LoginView.class);
+
+        VerticalLayout root = getContent();
+        root.addClassName("register-view");
+        root.setWidthFull();
+        root.setAlignItems(FlexComponent.Alignment.CENTER);
+        root.add(new H2("Register"), form, send, link);
     }
 
     private void register(String firstName, String lastName, String userName, String password1, String password2,
