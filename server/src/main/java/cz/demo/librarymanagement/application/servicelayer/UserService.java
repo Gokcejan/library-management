@@ -87,4 +87,10 @@ public class UserService {
         Optional<User> userOptional = userRepository.findOneById(userId);
         return userOptional.orElseThrow(() -> new NotFoundException(format("The User [%s] not found.", userId)));
     }
+
+    public UserDto getByUsername(String username) {
+        Optional<User> userOptional = userRepository.findOneByUsername(username);
+        return userOptional.map(userMapper::toDto)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+    }
 }

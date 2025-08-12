@@ -22,12 +22,13 @@ public class BookForm extends FormLayout {
     TextField bookId = new TextField("Book ID");
     TextField title = new TextField("Title");
     ComboBox<BookStatus> status = new ComboBox<>("Status");
-    TextField authorId = new TextField("Author ID");
-    TextField publisherId = new TextField("Publisher ID");
+    TextField authorLastName = new TextField("Author");
+    TextField publisherName = new TextField("Publisher");
 
     Button update = new Button("Update");
     Button create = new Button("Create");
     Button delete = new Button("Delete");
+    Button borrow = new Button("Borrow");
     Button close = new Button("Close");
 
     Binder<BookDto> binder = new BeanValidationBinder<>(BookDto.class);
@@ -47,8 +48,8 @@ public class BookForm extends FormLayout {
                 bookId,
                 title,
                 status,
-                authorId,
-                publisherId,
+                authorLastName,
+                publisherName,
                 createButtonsLayout()
         );
 
@@ -65,6 +66,7 @@ public class BookForm extends FormLayout {
         update.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         create.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        borrow.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
         update.addClickShortcut(Key.ENTER);
@@ -72,6 +74,7 @@ public class BookForm extends FormLayout {
 
         update.addClickListener(click -> validateAndSave());
         delete.addClickListener(click -> fireEvent(new DeleteEvent(this, binder.getBean())));
+        borrow.addClickListener(click -> fireEvent(new BorrowEvent(this, binder.getBean())));
         close.addClickListener(click -> fireEvent(new CloseEvent(this)));
 
         create.addClickListener(click -> validateAndCreate());
@@ -82,7 +85,7 @@ public class BookForm extends FormLayout {
             create.setEnabled(valid);
         });
 
-        HorizontalLayout buttonsLayout = new HorizontalLayout(update, create, delete, close);
+        HorizontalLayout buttonsLayout = new HorizontalLayout(update, create, delete, borrow, close);
         buttonsLayout.addClassName("buttons");
 
         return buttonsLayout;
@@ -128,6 +131,12 @@ public class BookForm extends FormLayout {
             super(source, bookDto);
         }
 
+    }
+
+    public static class BorrowEvent extends BookFormEvent {
+        BorrowEvent(BookForm source, BookDto bookDto) {
+            super(source, bookDto);
+        }
     }
 
     public static class CloseEvent extends BookFormEvent {

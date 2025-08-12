@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -39,7 +40,7 @@ public class BorrowService {
     @Autowired
     BookRepository bookRepository;
 
-
+    @Transactional
     public BorrowDto createBorrow(BorrowCreateDto createDto) {
 
         Book relatedBook = bookService.findBook(createDto.getBookId());
@@ -47,8 +48,9 @@ public class BorrowService {
 
         Borrow borrow = borrowMapper.toEntity(relatedBook, relatedUser);
         Borrow savedBorrow = borrowRepository.save(borrow);
+        relatedBook.setStatus(BookStatus.BORROWED);
+        bookRepository.save(relatedBook);
         return borrowMapper.toDto(savedBorrow);
-
     }
 
     public BorrowDto getBorrow(Long borrowId) {

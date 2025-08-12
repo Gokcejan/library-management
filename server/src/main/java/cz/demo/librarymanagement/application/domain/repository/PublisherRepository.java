@@ -10,4 +10,6 @@ public interface PublisherRepository extends JpaRepository<Publisher, Long>, Jpa
 
 
     Optional<Publisher> findOneById(Long publisherId);
+
+    Optional<Publisher> findOneByName(String publisherName);
 }

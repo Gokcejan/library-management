@@ -38,4 +38,10 @@ public class PublisherService {
         return userOptional.orElseThrow(() -> new NotFoundException(format("The Publisher [%s] not found.", publisherId)));
 
     }
+
+    public Publisher findPublisher(String publisherName) {
+        Optional<Publisher> userOptional = publisherRepository.findOneByName(publisherName);
+        return userOptional.orElseThrow(() -> new NotFoundException(format("The Publisher [%s] not found.", publisherName)));
+
+    }
 }
