@@ -7,6 +7,13 @@ a[highlight] {
 
 .header {
     padding: 0 var(--lumo-space-m);
+    display: flex;
+    align-items: center;
+}
+
+.header .user-name {
+    margin-left: auto;
+    font-size: var(--lumo-font-size-s);
 }
 
 .header h1.logo {

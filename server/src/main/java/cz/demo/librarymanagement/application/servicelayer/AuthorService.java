@@ -40,6 +40,12 @@ public class AuthorService {
         return authorOptional.orElseThrow(() -> new NotFoundException(format("The Author [%s] not found.", authorId)));
     }
 
+    public Author findAuthor(String lastName) {
+        Optional<Author> authorOptional = authorRepository.findOneByLastName(lastName);
+        return authorOptional.orElseThrow(() -> new NotFoundException(format("The Author [%s] not found.", lastName)));
+
+    }
+
     public Page<AuthorDto> getAllAuthors(Pageable pageable) {
         Page<Author> authorsPage = authorRepository.findAll(pageable);
         return authorsPage.map(authorMapper::toDto);

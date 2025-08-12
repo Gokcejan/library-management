@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface AuthorRepository extends JpaRepository<Author, Long>, JpaSpecificationExecutor<Author> {
 
     Optional<Author> findOneById(Long id);
+
+    Optional<Author> findOneByLastName(String LastName);
 }

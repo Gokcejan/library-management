@@ -1,7 +1,6 @@
 package cz.demo.librarymanagement.ui.views.list;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
@@ -11,24 +10,22 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import cz.demo.librarymanagement.application.domain.Book;
+import cz.demo.librarymanagement.application.domain.Author;
+import cz.demo.librarymanagement.application.domain.Publisher;
 import cz.demo.librarymanagement.application.domain.repository.BookRepository;
 import cz.demo.librarymanagement.application.exceptions.NotFoundException;
-import cz.demo.librarymanagement.application.servicelayer.BookService;
-import cz.demo.librarymanagement.dto.BookCreateDto;
-import cz.demo.librarymanagement.dto.BookDto;
-import cz.demo.librarymanagement.dto.BookUpdateDto;
+import cz.demo.librarymanagement.application.servicelayer.*;
+import cz.demo.librarymanagement.domain.BookStatus;
+import cz.demo.librarymanagement.dto.*;
 import cz.demo.librarymanagement.ui.MainLayout;
-import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
-import java.util.Optional;
-
-import static java.lang.String.format;
 
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("List of Books")
@@ -43,6 +40,19 @@ public class ListView extends VerticalLayout {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private BorrowService borrowService;
+
+    @Autowired
+    private AuthorService authorService;
+
+    @Autowired
+    private PublisherService publisherService;
+
+
     public ListView(BookService bookService) {
         this.bookService = bookService;
         addClassName("list-view");
@@ -50,11 +60,11 @@ public class ListView extends VerticalLayout {
 
         configureGrid();
 
-
         form = new BookForm();
         form.addListener(BookForm.UpdateEvent.class, this::updateBook);
         form.addListener(BookForm.DeleteEvent.class, this::deleteBook);
         form.addListener(BookForm.CreateEvent.class, this::createBook);
+        form.addListener(BookForm.BorrowEvent.class, this::borrowBook);
         form.addListener(BookForm.CloseEvent.class, event -> closeEditor());
 
         Div content = new Div(grid, form);
@@ -93,18 +103,48 @@ public class ListView extends VerticalLayout {
 
     private void updateBook(BookForm.UpdateEvent evt) {
 
-        BookUpdateDto dto = new BookUpdateDto();
-        dto.setTitle(evt.getBookDto().getTitle());
-        dto.setStatus(evt.getBookDto().getStatus());
-        dto.setAuthorId(evt.getBookDto().getAuthorId());
-        dto.setPublisherId(evt.getBookDto().getPublisherId());
+        String authorLastName = evt.getBookDto().getAuthorLastName();
+        String publisherName = evt.getBookDto().getPublisherName();
 
-        bookService.updateBook(evt.getBookDto().getBookId(), dto);
-        Notification.show("Book updated successfully");
+        try {
+            Author author = authorService.findAuthor(authorLastName);
+            Publisher publisher = publisherService.findPublisher(publisherName);
+
+            BookUpdateDto dto = new BookUpdateDto();
+            dto.setTitle(evt.getBookDto().getTitle());
+            dto.setStatus(evt.getBookDto().getStatus());
+            dto.setAuthorId(author.getId());
+            dto.setPublisherId(publisher.getId());
+
+            bookService.updateBook(evt.getBookDto().getBookId(), dto);
+            Notification.show("Book updated successfully");
+            updateList();
+            clearForm();
+            closeEditor();
+
+        } catch (NotFoundException ex) {
+            Notification.show(ex.getMessage());
+        }
+    }
+
+    private void borrowBook(BookForm.BorrowEvent event) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+
+        UserDto user = userService.getByUsername(username);
+        BookDto book = event.getBookDto();
+
+        if (book.getStatus().equals(BookStatus.AVAILABLE)){
+            BorrowCreateDto borrowCreateDto = new BorrowCreateDto(book.getBookId(), user.getId());
+            borrowService.createBorrow(borrowCreateDto);
+
+            Notification.show("Book borrowed successfully!");
+        } else {
+            Notification.show("Book is not possible to borrow!");
+        }
         updateList();
         clearForm();
         closeEditor();
-
     }
 
     private void configureGrid() {
@@ -161,11 +201,6 @@ public class ListView extends VerticalLayout {
         }
     }
 
-    private Book findBook(Long bookId) {
-        Optional<Book> bookOptional = bookRepository.findOneById(bookId);
-        return bookOptional.orElseThrow(() -> new NotFoundException(format("The Book [%s] not found.", bookId)));
-    }
-
     private void closeEditor() {
         form.setBook(null);
         form.setVisible(false);
@@ -205,8 +240,8 @@ public class ListView extends VerticalLayout {
         form.bookId.clear();
         form.title.clear();
         form.status.clear();
-        form.authorId.clear();
-        form.publisherId.clear();
+        form.authorLastName.clear();
+        form.publisherName.clear();
     }
 
 }

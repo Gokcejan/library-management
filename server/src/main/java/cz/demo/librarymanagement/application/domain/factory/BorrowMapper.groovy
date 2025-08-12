@@ -35,6 +35,8 @@ class BorrowMapper {
         borrow.dueDate = LocalDateTime.now().plusDays(30)
         borrow.borrowedBook = relatedBook
         borrow.borrowedBy = relatedUser
+        relatedUser.borrows.add(borrow)
+        relatedBook.borrows.add(borrow)
 
         borrow
     }
