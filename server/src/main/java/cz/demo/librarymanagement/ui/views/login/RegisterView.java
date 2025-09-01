@@ -54,11 +54,21 @@ public class RegisterView extends Composite<VerticalLayout> {
                 new FormLayout.ResponsiveStep("480px",2)
         );
 
-        Button send = new Button("Register", e ->
-                register(firstName.getValue(), lastName.getValue(),
-                        userName.getValue(), pwd1.getValue(), pwd2.getValue(),
-                        email.getValue(), phoneNumber.getValue())
-        );
+        Button send = new Button("Register", e -> {
+            boolean ok = register(firstName.getValue(), lastName.getValue(),
+                    userName.getValue(), pwd1.getValue(), pwd2.getValue(),
+                    email.getValue(), phoneNumber.getValue());
+
+            if (ok) {
+                firstName.clear();
+                lastName.clear();
+                userName.clear();
+                email.clear();
+                pwd1.clear();
+                pwd2.clear();
+                phoneNumber.clear();
+            }
+        });
 
         RouterLink link = new RouterLink("Log in", LoginView.class);
 
@@ -69,20 +79,24 @@ public class RegisterView extends Composite<VerticalLayout> {
         root.add(new H2("Register"), form, send, link);
     }
 
-    private void register(String firstName, String lastName, String userName, String password1, String password2,
+    private boolean register(String firstName, String lastName, String userName, String password1, String password2,
                           String email, String phoneNumber) {
 
         UserCreateDto dto = new UserCreateDto(firstName,lastName, userName, password1, email, phoneNumber, Role.USER);
 
         if (userName.trim().isEmpty()){
             Notification.show("Enter a username");
+            return false;
         } else if (password1.isEmpty() || password2.isEmpty()) {
             Notification.show("Enter a password");
+            return false;
         } else if (!password1.equals(password2)){
             Notification.show("Passwords don't match");
+            return false;
         } else {
             userService.createUser(dto);
             Notification.show("Registration succeed");
+            return true;
         }
 
     }

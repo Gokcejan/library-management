@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity(name = "BOOK")
-class Book extends AbstractEntity {
+class Book extends AbstractEntity implements Comparable<Book> {
 
     @Column(name = "BOOK_TITLE", nullable = false)
     String title
@@ -37,4 +37,9 @@ class Book extends AbstractEntity {
 
     @OneToMany(mappedBy = "borrowedBook", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     Set<Borrow> borrows = new HashSet<>()
+
+    @Override
+    int compareTo(Book o) {
+        return o.id.compareTo(this.id)
+    }
 }

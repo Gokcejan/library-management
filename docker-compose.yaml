@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres_container
+    environment:
+      POSTGRES_DB: library_management
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d library_management"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    image: library-management:latest
+    container_name: library_management_app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      # příp. jednorázově při existující DB bez historie:
+      # SPRING_FLYWAY_BASELINE-ON-MIGRATE: "true"
+    ports:
+      - "8112:8112"
+    # pokud chceš rychlé logy v konzoli:
+    # command: ["java","-jar","/workspace/app.jar","--logging.level.root=INFO"]
+
+volumes:
+  pgdata:

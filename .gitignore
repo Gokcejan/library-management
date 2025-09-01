@@ -49,6 +49,10 @@ bin/
 .java-version
 classes/
 
+# Logs
+*.log
+*.log.*
+
 ### VS Code ###
 .vscode/
 
@@ -61,3 +65,8 @@ classes/
 /server/node_modules/
 /server/src/main/bundles/
 /server/vite.generated.ts
+
+# Generated frontend files
+/server/vite-devmode.ts
+/server/index.ts
+/server/frontend/generated/
