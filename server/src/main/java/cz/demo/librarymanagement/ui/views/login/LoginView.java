@@ -1,6 +1,9 @@
 package cz.demo.librarymanagement.ui.views.login;
 
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -29,12 +32,24 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
         login.setAction("login");
 
+        // Textový odkaz "Register" s okamžitým client-side přesměrováním
+        Anchor register = new Anchor("register", "Register");
+        // Pro jistotu ignoruj Vaadin Router (full reload je OK)
+        register.getElement().setAttribute("router-ignore", true);
+        // Klíčová část: přesměruj už na mousedown, bez blur/validace
+        register.getElement().executeJs(
+                "this.addEventListener('mousedown', (e) => {" +
+                        "  e.preventDefault();" +
+                        "  e.stopPropagation();" +
+                        "  window.location.href = this.href;" +
+                        "}, { once: true });"
+        );
+
         add(
                 new H1("Library management"),
                 login,
-        new RouterLink("Register", RegisterView.class)
+                register
         );
-
 
     }
 

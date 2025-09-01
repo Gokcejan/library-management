@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.Optional;
 
 import static java.lang.String.format;
@@ -30,6 +32,7 @@ public class AuthorService {
         return authorMapper.toDto(savedAuthor);
     }
 
+    @Transactional(readOnly = true)
     public AuthorDto getAuthor(Long authorId) {
         Author author = findAuthor(authorId);
         return authorMapper.toDto(author);
@@ -46,6 +49,7 @@ public class AuthorService {
 
     }
 
+    @Transactional(readOnly = true)
     public Page<AuthorDto> getAllAuthors(Pageable pageable) {
         Page<Author> authorsPage = authorRepository.findAll(pageable);
         return authorsPage.map(authorMapper::toDto);

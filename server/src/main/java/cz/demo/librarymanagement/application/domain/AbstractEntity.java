@@ -8,7 +8,12 @@ import java.util.Objects;
 public abstract class AbstractEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tableGenerator")
+    @SequenceGenerator(
+            name = "table_generator",
+            sequenceName = "table_generator",
+            allocationSize = 1
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "table_generator")
     @Column(name = "ID", unique = true, nullable = false, updatable = false)
     private Long id;
 

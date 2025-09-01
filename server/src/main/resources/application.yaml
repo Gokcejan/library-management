@@ -1,0 +1,96 @@
+# ---------- COMMON (pro všechny profily) ----------
+info:
+  app:
+    name: Library Management
+
+server:
+  port: 8112
+
+spring:
+  application:
+    name: library-management
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+
+# ---------- DEV ----------
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/library_management
+    username: app
+    password: secret
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 10000
+      connection-test-query: SELECT 1
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.jdbc.lob.non_contextual_creation: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    # baseline-on-migrate: true   # zapni jen pokud DB už existuje bez flyway_schema_history
+
+logging:
+  level:
+    root: INFO
+  file:
+    name: logs/library-management.log
+
+# ---------- DOCKER ----------
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://postgres:5432/library_management
+    username: app
+    password: secret
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 10000
+      connection-test-query: SELECT 1
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.jdbc.lob.non_contextual_creation: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+logging:
+  level:
+    root: INFO
+  file:
+    name: logs/library-management.log
+
+# ---------- TEST ----------
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  flyway:
+    enabled: false
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop

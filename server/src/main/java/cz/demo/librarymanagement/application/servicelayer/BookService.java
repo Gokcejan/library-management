@@ -12,9 +12,12 @@ import cz.demo.librarymanagement.dto.BookUpdateDto;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static java.lang.String.format;
@@ -49,16 +52,16 @@ public class BookService {
     }
     @Transactional
     public Page<BookDto> getAllBooks(String filterText, Pageable pageable) {
-        if (filterText == null || filterText.isEmpty()) {
+        Pageable effective = pageable.getSort().isUnsorted()
+                ? PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+                Sort.by(Sort.Direction.ASC, "id"))
+                : pageable;
 
-            Page<Book> booksPage = bookRepository.findAll(pageable);
-            return booksPage.map(bookMapper::toDto);
-        } else {
+        Page<Book> page = (filterText == null || filterText.isBlank())
+                ? bookRepository.findAll(effective)
+                : bookRepository.findAllFilteredByAuthorLastName(filterText, effective);
 
-            Page<Book> booksPage = bookRepository.findAllFilteredByAuthorLastName(filterText, pageable);
-            return booksPage.map(bookMapper::toDto);
-
-        }
+        return page.map(bookMapper::toDto);
     }
 
     public void deleteBook(Long bookId) {
