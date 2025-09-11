@@ -20,7 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity(name = "LIBRARY_USER")
-class User extends AbstractEntity implements UserDetails {
+class User extends AbstractEntity {
 
     @Column(name = "FIRST_NAME", nullable = false)
     String firstName
@@ -46,40 +46,5 @@ class User extends AbstractEntity implements UserDetails {
 
     @OneToMany(mappedBy = "borrowedBy", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     Set<Borrow> borrows = new HashSet<>()
-
-    @Override
-    Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()))
-    }
-
-    @Override
-    String getPassword() {
-        return password
-    }
-
-    @Override
-    String getUsername() {
-        return username
-    }
-
-    @Override
-    boolean isAccountNonExpired() {
-        return true
-    }
-
-    @Override
-    boolean isAccountNonLocked() {
-        return true
-    }
-
-    @Override
-    boolean isCredentialsNonExpired() {
-        return true
-    }
-
-    @Override
-    boolean isEnabled() {
-        return true
-    }
 
 }
